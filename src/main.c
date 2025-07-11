@@ -85,11 +85,6 @@ static void check_start_application(void);
 static volatile bool main_b_cdc_enable = false;
 extern int8_t led_tick_step;
 
-#ifdef BOARD_SCREEN
-void screen_update(void);
-void screen_show_usb_status(bool connected);
-#endif
-
 #if defined(SAMD21)
     #define RESET_CONTROLLER PM
 #elif defined(SAMD51)
