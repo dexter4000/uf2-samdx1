@@ -81,7 +81,9 @@ void msc_reset(void) {
     reset_ep(USB_EP_MSC_IN);
     reset_ep(USB_EP_MSC_OUT);
     
+#ifdef BOARD_SCREEN
     screen_msc_reset();
+#endif
 }
 
 //! Structure to receive a CBW packet
@@ -744,8 +746,14 @@ static void udi_msc_sbc_trans(bool b_read) {
     logwrite("\n");
 #endif
 
+#ifdef BOARD_SCREEN
     if (!b_read) {
-        screen_msc_write_start(udi_msc_nb_block); // Add this
+        screen_msc_write_start(udi_msc_nb_block);
+    }
+#endif
+
+    if (!b_read) {
+        screen_msc_write_start(udi_msc_nb_block); 
     }
 
     for (uint32_t i = 0; i < udi_msc_nb_block; ++i) {
@@ -759,18 +767,25 @@ static void udi_msc_sbc_trans(bool b_read) {
             USB_Write(block_buffer, UDI_MSC_BLOCK_SIZE, USB_EP_MSC_IN);
         } else {
             USB_ReadBlocking(block_buffer, UDI_MSC_BLOCK_SIZE, USB_EP_MSC_OUT, 0);
-            screen_msc_set_block_data(block_buffer); // Add this line
+            #ifdef BOARD_SCREEN
+                screen_msc_set_block_data(block_buffer);
+            #endif
+            screen_msc_set_block_data(block_buffer); 
             write_block(udi_msc_addr + i, block_buffer, false, &usbWriteState);
             led_signal();
             
-            screen_msc_write_block(i); // Add this
+            #ifdef BOARD_SCREEN
+            screen_msc_write_block(i);
+            #endif
         }
         udi_msc_csw.dCSWDataResidue -= UDI_MSC_BLOCK_SIZE;
     }
 
+    #ifdef BOARD_SCREEN
     if (!b_read) {
-        screen_msc_write_complete(); // Add this
+        screen_msc_write_complete();
     }
+    #endif
 
     udi_msc_sense_pass();
     udi_msc_csw_process();
