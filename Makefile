@@ -73,19 +73,18 @@ COMMON_SRC = \
 	src/startup_$(CHIP_FAMILY).c \
 	src/usart_sam_ba.c \
 	src/images.c \
-	src/utils.c \
-	src/screen_msc.c 
+	src/utils.c
 
 # Screen driver selection based on SCREEN_TYPE
 ifeq ($(SCREEN_TYPE),ST7789)
-  SCREEN_SRC = src/screen7789.c
+  SCREEN_SRC = src/screen7789.c src/screen_msc.c
   CFLAGS += -DSCREEN_ST7789
 else ifeq ($(SCREEN_TYPE),ST7735)
-  SCREEN_SRC = src/screen.c
+  SCREEN_SRC = src/screen.c src/screen_msc.c
   CFLAGS += -DSCREEN_ST7735
 else ifdef BOARD_SCREEN
   # Default to original screen driver if BOARD_SCREEN is defined but no SCREEN_TYPE
-  SCREEN_SRC = src/screen.c
+  SCREEN_SRC = src/screen.c src/screen_msc.c
   CFLAGS += -DSCREEN_DEFAULT
 else
   # No screen support
