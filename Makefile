@@ -72,20 +72,38 @@ COMMON_SRC = \
 	src/init_$(CHIP_FAMILY).c \
 	src/startup_$(CHIP_FAMILY).c \
 	src/usart_sam_ba.c \
-	src/screen.c \
 	src/images.c \
-	src/utils.c
+	src/utils.c \
+	src/screen_msc.c 
+
+# Screen driver selection based on SCREEN_TYPE
+ifeq ($(SCREEN_TYPE),ST7789)
+  SCREEN_SRC = src/screen7789.c
+  CFLAGS += -DSCREEN_ST7789
+else ifeq ($(SCREEN_TYPE),ST7735)
+  SCREEN_SRC = src/screen.c
+  CFLAGS += -DSCREEN_ST7735
+else ifdef BOARD_SCREEN
+  # Default to original screen driver if BOARD_SCREEN is defined but no SCREEN_TYPE
+  SCREEN_SRC = src/screen.c
+  CFLAGS += -DSCREEN_DEFAULT
+else
+  # No screen support
+  SCREEN_SRC =
+endif
 
 SOURCES = $(COMMON_SRC) \
+	$(SCREEN_SRC) \
 	src/cdc_enumerate.c \
 	src/fat.c \
 	src/main.c \
 	src/msc.c \
 	src/sam_ba_monitor.c \
 	src/uart_driver.c \
-	src/hid.c \
+	src/hid.c
 
 SELF_SOURCES = $(COMMON_SRC) \
+	$(SCREEN_SRC) \
 	src/selfmain.c
 
 OBJECTS = $(patsubst src/%.c,$(BUILD_PATH)/%.o,$(SOURCES))
