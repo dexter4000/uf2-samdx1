@@ -144,17 +144,17 @@ static void spi_write(uint8_t data) {
 }
 
 static void write_cmd(uint8_t cmd) {
-    PINOP(pin_dc, OUTCLR);  // DC low for command
-    PINOP(pin_cs, OUTCLR);  // CS low
+    PINOP(pin_dc, OUTCLR);  
+    PINOP(pin_cs, OUTCLR);  
     spi_write(cmd);
-    PINOP(pin_cs, OUTSET);  // CS high
+    PINOP(pin_cs, OUTSET);  
 }
 
 static void write_data(uint8_t data) {
-    PINOP(pin_dc, OUTSET);  // DC high for data
-    PINOP(pin_cs, OUTCLR);  // CS low
+    PINOP(pin_dc, OUTSET);  
+    PINOP(pin_cs, OUTCLR);  
     spi_write(data);
-    PINOP(pin_cs, OUTSET);  // CS high
+    PINOP(pin_cs, OUTSET);  
 }
 
 static void write_data_16(uint16_t data) {
@@ -234,8 +234,8 @@ void screen_fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t c
     uint8_t lo = color & 0xFF;
     
     for (uint32_t i = 0; i < w * h; i++) {
-        spi_write(hi);  // High byte first (this is standard)
-        spi_write(lo);  // Low byte second
+        spi_write(hi);  
+        spi_write(lo);  
     }
     
     PINOP(pin_cs, OUTSET);
@@ -254,7 +254,7 @@ static void draw_char(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t b
             uint8_t column = char_data[col];
             for (int row = 0; row < 7; row++) {
                 if (column & (1 << row)) {
-                    // Draw 2x2 block instead of 1x1
+                    
                     screen_fill_rect(x + col*2, y + row*2, 2, 2, color);
                 }
             }
@@ -265,11 +265,11 @@ static void draw_char(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t b
             uint8_t column = char_data[col];
             for (int row = 0; row < 7; row++) {
                 uint16_t pixel_color = (column & (1 << row)) ? color : bg_color;
-                // Draw 2x2 block instead of 1x1
+                
                 screen_fill_rect(x + col*2, y + row*2, 2, 2, pixel_color);
             }
         }
-        // Draw spacing (2x size)
+        
         screen_fill_rect(x + 10, y, 2, 14, bg_color);
     }
 }
@@ -278,19 +278,19 @@ static void draw_char(uint16_t x, uint16_t y, char c, uint16_t color, uint16_t b
 static void draw_string(uint16_t x, uint16_t y, const char* str, uint16_t color, uint16_t bg_color) {
     while (*str) {
         draw_char(x, y, *str, color, bg_color);
-        x += 12;  // Character width (5*2) + spacing (2)
+        x += 12;  
         str++;
     }
 }
 
 // Draw centered string
 static void draw_string_centered(uint16_t y, const char* str, uint16_t color, uint16_t bg_color) {
-    // Calculate string length
+    
     uint16_t len = 0;
     const char* p = str;
     while (*p++) len++;
     
-    // Calculate centered X position (2x character width)
+    
     uint16_t total_width = len * 12;
     uint16_t x = (screen_width - total_width) / 2;
     
@@ -346,7 +346,6 @@ void screen_show_boot(void) {
     screen_fill_rect(62, 162, 40, 6, COLOR_GREEN);
 }
 
-// Show USB enumeration status
 // Show USB enumeration status
 void screen_show_usb_status(bool connected) {
     // Clear status area
@@ -446,7 +445,6 @@ void screen_early_init(void) {
 
 // Initialize screen
 void screen_init(void) {
-    // Initialize pins based on your wiring
     pin_sck = PIN_PA17;
     pin_mosi = PIN_PB23;
     pin_cs = PIN_PA16;
@@ -463,11 +461,10 @@ void screen_init(void) {
     PINOP(pin_bl, DIRSET);
     
     // Set initial states
-    PINOP(pin_cs, OUTSET);   // CS high (deselected)
-    PINOP(pin_sck, OUTCLR);  // Clock low
-    PINOP(pin_dc, OUTSET);   // DC high
+    PINOP(pin_cs, OUTSET);   
+    PINOP(pin_sck, OUTCLR);  
+    PINOP(pin_dc, OUTSET);   
     
-    // Add a small delay before initializing
     delay(100);
     
     // Initialize display
@@ -494,7 +491,7 @@ void draw_drag(void) {
 // Called when USB connects
 void screen_on_usb_connect(void) {
     screen_show_usb_status(true);
-    delay(500); // Brief delay to show USB connected
+    delay(500); 
     screen_show_uf2_mode();
 }
 

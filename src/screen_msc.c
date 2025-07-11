@@ -2,7 +2,6 @@
 
 #ifdef BOARD_SCREEN
 
-// Function declaration from screen7789.c (only what's not in uf2.h)
 extern void screen_show_upload_progress(uint32_t bytes_written, uint32_t total_bytes);
 
 // State tracking
@@ -23,7 +22,7 @@ void screen_msc_reset(void) {
     total_blocks = 0;
     uf2_blocks_written = 0;
     last_block_data = NULL;
-    draw_drag(); // Return to main UF2 screen
+    draw_drag(); 
 }
 
 // Hook called before a write operation
@@ -31,7 +30,7 @@ void screen_msc_write_start(uint32_t num_blocks) {
     total_blocks = num_blocks;
     current_block = 0;
     uf2_blocks_written = 0;
-    // Don't set upload_in_progress yet - wait for UF2 detection
+    
 }
 
 // New function to check if a block contains UF2 data
@@ -42,8 +41,7 @@ bool screen_msc_check_uf2_block(uint8_t* block_data) {
     last_block_data = block_data;
     
     // Check for UF2 magic numbers at the start of the block
-    // Use memcpy to avoid alignment issues
-    uint32_t magic0, magic1;
+     uint32_t magic0, magic1;
     memcpy(&magic0, block_data, 4);
     memcpy(&magic1, block_data + 4, 4);
     

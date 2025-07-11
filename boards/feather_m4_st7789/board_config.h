@@ -37,7 +37,7 @@ const uint32_t config_data[] = {
     513675505, 539130489, // magic
     50, 100,  // used entries, total entries
     
-    // Basic pin definitions (from standard Feather M4)
+    // Basic pin definitions
     4, 0x6, // PIN_BTN_A = PA06 (A5)
     5, 0x5, // PIN_BTN_B = PA05 (A1)
     13, 0x17, // PIN_LED = PA23 (D13)
@@ -50,7 +50,7 @@ const uint32_t config_data[] = {
     25, 0xc, // PIN_SDA = PA12 (SDA)
     28, 0x0, // PIN_TX = PA00 (not exposed on Feather M4)
     
-    // Display pins for ST7789V - Based on your actual wiring
+    // Display pins for ST7789V
     32, 0x11, // PIN_DISPLAY_SCK = PA17 - CLK pin
     34, 0x37, // PIN_DISPLAY_MOSI = PB23 - DIN pin
     35, 0x10, // PIN_DISPLAY_CS = PA16 - CS pin
@@ -58,7 +58,7 @@ const uint32_t config_data[] = {
     43, 0x13, // PIN_DISPLAY_RST = PA19 - RST pin
     59, 0x12, // PIN_DISPLAY_BL = PA18 - BL pin (backlight)
     
-    // Display parameters for Waveshare 2inch ST7789V Module
+    // Display parameters
     37, 240, // DISPLAY_WIDTH = 240
     38, 320, // DISPLAY_HEIGHT = 320
     39, 0x80, // DISPLAY_CFG0 = 0x80 (ST7789V specific config)
