@@ -86,17 +86,13 @@ ifdef SCREEN_TYPE
   else
     $(error Unknown SCREEN_TYPE: $(SCREEN_TYPE))
   endif
-  # All screens get the common wrapper and MSC integration
+  # All screens get the dispatcher and MSC integration
   SCREEN_SRC = src/screen.c $(SCREEN_DRIVER) src/screen_msc.c
   CFLAGS += -DBOARD_SCREEN=1
-else ifdef BOARD_SCREEN
-  # Board has BOARD_SCREEN defined but no specific screen type
-  # Use the original screen.c implementation
-  SCREEN_SRC = src/screen.c src/screen_msc.c
-  CFLAGS += -DBOARD_SCREEN=1
 else
-  # No screen support - use dummy functions
-  SCREEN_SRC =
+  # No SCREEN_TYPE but maybe BOARD_SCREEN is defined in the header
+  # These boards will use the default ST7735 driver
+  SCREEN_SRC = src/screen.c src/screen_st7735.c src/screen_msc.c
 endif
 
 $(info SCREEN_SRC = $(SCREEN_SRC))
