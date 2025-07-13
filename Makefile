@@ -73,23 +73,33 @@ COMMON_SRC = \
 	src/startup_$(CHIP_FAMILY).c \
 	src/usart_sam_ba.c \
 	src/images.c \
-	src/utils.c
+	src/utils.c \
 
 # Screen driver selection based on SCREEN_TYPE
-ifeq ($(SCREEN_TYPE),ST7789)
-  SCREEN_SRC = src/screen7789.c src/screen_msc.c
-  CFLAGS += -DSCREEN_ST7789
-else ifeq ($(SCREEN_TYPE),ST7735)
-  SCREEN_SRC = src/screen.c src/screen_msc.c
-  CFLAGS += -DSCREEN_ST7735
+ifdef SCREEN_TYPE
+  ifeq ($(SCREEN_TYPE),ST7789)
+    SCREEN_DRIVER = src/screen_st7789.c
+    CFLAGS += -DUSE_SCREEN_ST7789
+  else ifeq ($(SCREEN_TYPE),ST7735)
+    SCREEN_DRIVER = src/screen_st7735.c
+    CFLAGS += -DUSE_SCREEN_ST7735
+  else
+    $(error Unknown SCREEN_TYPE: $(SCREEN_TYPE))
+  endif
+  # All screens get the common wrapper and MSC integration
+  SCREEN_SRC = src/screen.c $(SCREEN_DRIVER) src/screen_msc.c
+  CFLAGS += -DBOARD_SCREEN=1
 else ifdef BOARD_SCREEN
-  # Default to original screen driver if BOARD_SCREEN is defined but no SCREEN_TYPE
+  # Board has BOARD_SCREEN defined but no specific screen type
+  # Use the original screen.c implementation
   SCREEN_SRC = src/screen.c src/screen_msc.c
-  CFLAGS += -DSCREEN_DEFAULT
+  CFLAGS += -DBOARD_SCREEN=1
 else
-  # No screen support
+  # No screen support - use dummy functions
   SCREEN_SRC =
 endif
+
+$(info SCREEN_SRC = $(SCREEN_SRC))
 
 SOURCES = $(COMMON_SRC) \
 	$(SCREEN_SRC) \

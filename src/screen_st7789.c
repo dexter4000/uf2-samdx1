@@ -98,12 +98,12 @@ static const uint8_t font5x7[] = {
 #define ST7789_NVGAMCTRL  0xE1
 
 
-#define ST7789_MADCTL_MY  0x80  // Row address order
-#define ST7789_MADCTL_MX  0x40  // Column address order
-#define ST7789_MADCTL_MV  0x20  // Row/column exchange
-#define ST7789_MADCTL_ML  0x10  // Vertical refresh order
-#define ST7789_MADCTL_RGB 0x00  // RGB order
-#define ST7789_MADCTL_BGR 0x08  // BGR order
+#define ST7789_MADCTL_MY  0x80
+#define ST7789_MADCTL_MX  0x40
+#define ST7789_MADCTL_MV  0x20
+#define ST7789_MADCTL_ML  0x10
+#define ST7789_MADCTL_RGB 0x00
+#define ST7789_MADCTL_BGR 0x08
 
 // Color definitions
 #define COLOR_BLACK   0x0000
@@ -347,7 +347,7 @@ void screen_show_boot(void) {
 }
 
 // Show USB enumeration status
-void screen_show_usb_status(bool connected) {
+void st7789_show_usb_status(bool connected) {
     // Clear status area
     screen_fill_rect(0, 120, screen_width, 80, COLOR_BLACK);
     
@@ -439,12 +439,12 @@ void screen_reset_upload_state(void) {
 }
 
 // Early initialization (called from led_init)
-void screen_early_init(void) {
+void st7789_early_init(void) {
     // Empty for now - pins will be initialized in screen_init
 }
 
 // Initialize screen
-void screen_init(void) {
+void st7789_init_display(void) {
     pin_sck = PIN_PA17;
     pin_mosi = PIN_PB23;
     pin_cs = PIN_PA16;
@@ -479,12 +479,12 @@ void screen_init(void) {
 }
 
 // Update function called periodically
-void screen_update(void) {
+void st7789_update(void) {
 
 }
 
 // Show drag-and-drop interface
-void draw_drag(void) {
+void st7789_draw_drag(void) {
     screen_show_uf2_mode();
 }
 
@@ -493,6 +493,20 @@ void screen_on_usb_connect(void) {
     screen_show_usb_status(true);
     delay(500); 
     screen_show_uf2_mode();
+}
+
+// Driver interface functions for screen.c
+void screen_driver_init(void) {
+    st7789_init_display();
+}
+
+void screen_driver_clear(uint16_t color) {
+    screen_fill_rect(0, 0, screen_width, screen_height, color);
+}
+
+// Main UF2 screen drawing function
+void st7789_draw_uf2_screen(void) {
+    screen_show_uf2_mode(); 
 }
 
 #endif // BOARD_SCREEN

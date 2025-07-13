@@ -41,7 +41,7 @@ bool screen_msc_check_uf2_block(uint8_t* block_data) {
     last_block_data = block_data;
     
     // Check for UF2 magic numbers at the start of the block
-     uint32_t magic0, magic1;
+    uint32_t magic0, magic1;
     memcpy(&magic0, block_data, 4);
     memcpy(&magic1, block_data + 4, 4);
     
